@@ -318,3 +318,4 @@ The selected AWS region must have a default VPC. If it does not, use an existing
 Run `git pull origin main --allow-unrelated-histories`, resolve conflicts if any, then push again. Do not force-push unless you deliberately intend to replace remote history and understand the consequences.
 <img width="1894" height="679" alt="image" src="https://github.com/user-attachments/assets/2e084ed2-bd7d-48bd-8e15-0a702e747c73" />
 >>>>>>> 640295499f3bc3ac94799f4724a3b44471db349b
+# terraform1
