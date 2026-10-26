@@ -1,18 +1,8 @@
 .terraform/
 *.tfstate
 *.tfstate.*
-<<<<<<< HEAD
 *.tfvars
 *.tfvars.json
-crash.log
-override.tf
-override.tf.json
-*_override.tf
-*_override.tf.json
-=======
-*.tfplan
-crash.log
-*.auto.tfvars
-terraform.tfvars
-.terraform.lock.hcl
->>>>>>> 640295499f3bc3ac94799f4724a3b44471db349b
+.env
+*.pem
+*.key
