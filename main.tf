@@ -28,7 +28,7 @@ module "ec2" {
   source        = "./modules/ec2"
   ami           = var.image_id
   instance_type = var.instance_type
-  subnet_id     = module.subnet.public_subnet_id
+  subnet_id     = module.subnet.private_subnet_id
   sg_id         = module.sg.sg_id
   key_name      = var.key_pair
   project       = var.project
