@@ -320,3 +320,151 @@ Run `git pull origin main --allow-unrelated-histories`, resolve conflicts if any
 >>>>>>> 640295499f3bc3ac94799f4724a3b44471db349b
 # terraform1
 # terraform1
+# AWS Infrastructure Using Terraform
+
+## Project Overview
+
+This project uses Terraform to provision AWS infrastructure using Infrastructure as Code (IaC). It uses reusable modules to create a VPC, subnets, security groups, and an EC2 instance.
+
+## Project Structure
+
+```text
+test-tf-repo/
+├── main.tf
+├── variables.tf
+├── terraform.tfvars
+└── modules/
+    ├── vpc/
+    ├── subnet/
+    ├── sg/
+    └── ec2/
+```
+
+## 1. main.tf
+
+The `main.tf` file configures the AWS provider and calls the Terraform modules.
+
+```hcl
+provider "aws" {
+  region = var.region
+}
+
+module "vpc" {
+  source   = "./modules/vpc"
+  vpc_cidr = var.vpc_cidr
+  project  = var.project
+  env      = var.env
+}
+
+module "subnet" {
+  source       = "./modules/subnet"
+  vpc_id       = module.vpc.vpc_id
+  igw_id       = module.vpc.igw_id
+  pri_sub_cidr = var.pri_sub_cidr
+  pub_sub_cidr = var.pub_sub_cidr
+  project      = var.project
+}
+
+module "sg" {
+  source  = "./modules/sg"
+  vpc_id  = module.vpc.vpc_id
+  project = var.project
+}
+
+module "ec2" {
+  source        = "./modules/ec2"
+  ami           = var.image_id
+  instance_type = var.instance_type
+  subnet_id     = module.subnet.private_subnet_id
+  sg_id         = module.sg.sg_id
+  key_name      = var.key_pair
+  project       = var.project
+}
+```
+
+## 2. variables.tf
+
+This file declares the variables used by `main.tf`.
+
+```hcl
+variable "region" {}
+variable "vpc_cidr" {}
+variable "project" {}
+variable "env" {}
+variable "pri_sub_cidr" {}
+variable "pub_sub_cidr" {}
+variable "image_id" {}
+variable "instance_type" {}
+variable "key_pair" {}
+```
+
+## 3. terraform.tfvars
+
+This file supplies values for the declared variables.
+
+```hcl
+region        = "ap-northeast-1"
+vpc_cidr      = "192.168.0.0/16"
+project       = "cdec"
+env           = "prod"
+pri_sub_cidr  = "192.168.0.0/22"
+pub_sub_cidr  = "192.168.4.0/22"
+image_id      = "YOUR_AMI_ID"
+instance_type = "t3.micro"
+key_pair      = "YOUR_KEY_PAIR_NAME"
+```
+
+Replace `YOUR_AMI_ID` and `YOUR_KEY_PAIR_NAME` with valid values for your AWS account and selected region.
+
+**Security:** Do not publish `terraform.tfvars` if it contains secrets or sensitive account details. For public repositories, it is safer to document example values in `terraform.tfvars.example` and add the actual `terraform.tfvars` to `.gitignore`.
+
+## Prerequisites
+
+- AWS account and appropriate IAM permissions
+- Terraform installed
+- AWS credentials configured securely
+- All referenced module files present in the project
+
+## Terraform Commands
+
+Initialize the working directory:
+
+```bash
+terraform init
+```
+
+Format the Terraform files:
+
+```bash
+terraform fmt -recursive
+```
+
+Validate the configuration:
+
+```bash
+terraform validate
+```
+
+Preview the infrastructure changes:
+
+```bash
+terraform plan
+```
+
+Create the infrastructure:
+
+```bash
+terraform apply
+```
+
+Delete the resources managed by this configuration when no longer needed:
+
+```bash
+terraform destroy
+```
+
+## Author
+
+Ashwini Shirsath
+<img width="1569" height="692" alt="image" src="https://github.com/user-attachments/assets/383593f4-3a02-4bb6-a391-669e4c5c439b" />
+<img width="1871" height="778" alt="image" src="https://github.com/user-attachments/assets/d388e7a4-11c6-47f5-89fa-783f5dc506f0" />
